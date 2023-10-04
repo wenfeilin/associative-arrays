@@ -7,7 +7,7 @@ import static java.lang.reflect.Array.newInstance;
  * and values of type V. Associative Arrays store key/value pairs
  * and permit you to look up values by key.
  *
- * @author Your Name Here
+ * @author Wenfei Lin
  * @author Samuel A. Rebelsky
  */
 public class AssociativeArray<K, V> {
@@ -57,14 +57,40 @@ public class AssociativeArray<K, V> {
    * Create a copy of this AssociativeArray.
    */
   public AssociativeArray<K, V> clone() {
-    return null; // STUB
+    AssociativeArray<K,V> clonedAssociativeArray = new AssociativeArray<K,V>();
+    clonedAssociativeArray.pairs = this.pairs;
+    clonedAssociativeArray.size = this.size;
+
+    return clonedAssociativeArray;
   } // clone()
 
   /**
    * Convert the array to a string.
    */
   public String toString() {
-    return "{}"; // STUB
+    String keyValuePairs = "{";
+    int numOfPairs = this.size;
+    int pairsAdded = 0;
+    int i = 0;
+
+    if (numOfPairs != 0) { // only add information about key value pairs if the arr is not empty
+      while (pairsAdded != numOfPairs) {
+        if (this.pairs[i] != null) {
+          keyValuePairs += " " + this.pairs[i].key + ": " + this.pairs[i].value;
+          pairsAdded++;
+        
+          if (pairsAdded != numOfPairs) {
+            keyValuePairs += ",";
+          } else {
+            keyValuePairs += " ";
+          }
+        }
+          i++;
+      }
+    }
+    keyValuePairs += "}";
+      
+    return keyValuePairs;
   } // toString()
 
   // +----------------+----------------------------------------------
@@ -129,7 +155,36 @@ public class AssociativeArray<K, V> {
    * If no such entry is found, throws an exception.
    */
   public int find(K key) throws KeyNotFoundException {
-    throw new KeyNotFoundException();   // STUB
+    int numOfPairs = this.size;
+    if (numOfPairs == 0) {
+      // If the array is empty, there is no key to be found
+      throw new KeyNotFoundException();
+    }
+    // Otherwise, the array has entries in it
+    int i = 0;
+    int keyIndex = -1;
+    int pairsTraversed = 0;
+
+    // Keep traversing the array while the end has not been reached and 
+    // the key has not been found!
+    while (keyIndex == -1 && pairsTraversed != numOfPairs) {
+      if (this.pairs[i] != null) {
+        // Only look at the entries in the array (not null parts of the array)
+        if (this.pairs[i].key == key) {
+          // If the current entry's key matches the one being searched for,
+          // save that entry's index
+          keyIndex = i;
+        }
+        ++pairsTraversed;
+      }
+      ++i;
+    }
+
+    if (keyIndex != -1) {
+      return keyIndex;
+    } else {
+      throw new KeyNotFoundException();
+    }
   } // find(K)
 
 } // class AssociativeArray
