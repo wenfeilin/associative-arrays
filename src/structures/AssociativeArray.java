@@ -113,14 +113,24 @@ public class AssociativeArray<K, V> {
    *                              array.
    */
   public V get(K key) throws KeyNotFoundException {
-    return null; // STUB
+    int keyIndex = this.find(key);
+    return this.pairs[keyIndex].value;
   } // get(K)
 
   /**
    * Determine if key appears in the associative array.
    */
   public boolean hasKey(K key) {
-    return false; // STUB
+    try {
+      // If the key is found in the array, then return true
+      this.find(key); 
+      return true;
+    } catch (KeyNotFoundException knfe) {
+      // If the key cannot be found in the array, then prepare to 
+      // catch the KeyNotFoundException it will throw
+    } 
+    // Return false to indicate there is no such key in the array
+    return false;
   } // hasKey(K)
 
   /**
