@@ -68,6 +68,8 @@ public class AssociativeArray<K, V> {
    * Convert the array to a string.
    */
   public String toString() {
+    //"{ key0: value0, key1: value1, ... keyn: valuen }"
+    
     String keyValuePairs = "{";
     int numOfPairs = this.size;
     int pairsAdded = 0;
@@ -102,7 +104,44 @@ public class AssociativeArray<K, V> {
    * get(key) will return value.
    */
   public void set(K key, V value) {
-    // STUB
+    int numOfPairs = this.size;
+
+    if (numOfPairs == 0) {
+      // If the array is empty, then add one element to the first index 
+      KVPair<K,V> newPair = (KVPair<K,V>) new KVPair<K,V>(key, value);
+      this.pairs[0] = newPair;
+      this.size++;
+    } else if (numOfPairs == this.pairs.length) {
+      // If the array is full, then expand the array before adding the new entry
+      KVPair<K,V> newPair = (KVPair<K,V>) new KVPair<K,V>(key, value);
+      int nextEntryIndex = numOfPairs;
+      this.expand();
+      this.pairs[nextEntryIndex] = newPair;
+      this.size++;
+    } else {
+      // Determine if a new entry will be added (anywhere in the array that is
+      // null) or if the value of the entry with the specified key will be 
+      // replaced by a new value
+      try {
+        int keyIndex = this.find(key);
+        // If no exception was caught from the line above, that means there 
+        // already exists an entry with the specified key, so just update that
+        // entry's value
+        this.pairs[keyIndex].value = value;
+
+      } catch (KeyNotFoundException knfe) {
+        // If an exception was caught, then there is current entry in the array
+        // with the specified key, so add a new entry to the array
+        KVPair<K,V> newPair = (KVPair<K,V>) new KVPair<K,V>(key, value);
+        int i = 0;
+
+        while (this.pairs[i] != null) {
+          ++i;
+        }
+        this.pairs[i] = newPair;
+        this.size++;
+      }
+    }
   } // set(K,V)
 
   /**
@@ -130,7 +169,7 @@ public class AssociativeArray<K, V> {
       // catch the KeyNotFoundException it will throw
     } 
     // Return false to indicate there is no such key in the array
-    return false;
+    return false;      
   } // hasKey(K)
 
   /**
@@ -139,7 +178,15 @@ public class AssociativeArray<K, V> {
    * in the associative array, does nothing.
    */
   public void remove(K key) {
-    // STUB
+    try {
+      // This will replace the pair with null at the index where the key 
+      // of the pair is found
+      int keyIndex = this.find(key);
+      this.pairs[keyIndex] = null;
+      this.size--;
+    } catch (KeyNotFoundException knfe) {
+      // Does nothing since there is no entry with specified key
+    }
   } // remove(K)
 
   /**
