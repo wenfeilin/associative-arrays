@@ -58,6 +58,12 @@ public class AssociativeArray<K, V> {
    */
   public AssociativeArray<K, V> clone() {
     AssociativeArray<K,V> clonedAssociativeArray = new AssociativeArray<K,V>();
+    int numOfExpansions = this.pairs.length / DEFAULT_CAPACITY;
+
+    // Expands the cloned array to match at least the size of the original array
+    for (int i = 0; i < numOfExpansions; i++) {
+      clonedAssociativeArray.expand();
+    }
 
     for (int i = 0; i < this.pairs.length; i++) { // Iterate through all of array
       if (this.pairs[i] != null) {
@@ -251,11 +257,14 @@ public class AssociativeArray<K, V> {
     // Keep traversing the array while the end has not been reached and 
     // the key has not been found
     while (keyIndex == -1 && pairsTraversed != numOfPairs) {
-      if (this.pairs[i] != null) {
-        // Only look at the entries in the array (not null parts of the array)
-        if (this.pairs[i].key.equals(key)) {
-          // If the current entry's key matches the one being searched for,
-          // save that entry's index
+      // Only look at the entries in the array with a KVPair<K,V> to account for null keys
+      if (this.pairs[i] instanceof KVPair<K, V>) {
+        // To account for when the key is null:
+        if (this.pairs[i].key == null) {
+          if (key == null) {
+            keyIndex = i;
+          }
+        } else if (this.pairs[i].key.equals(key)) {
           keyIndex = i;
         }
         ++pairsTraversed;

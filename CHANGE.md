@@ -1,0 +1,3 @@
+Changes made to AssociativeArray.java:
+1. To pass all tests in AssociativeArrayTests.java, lines 61 to 66 in the clone method were added. The added code now expands the cloned array to match the length of the original array, which I forgot to account for previously.
+2. To account for null keys (in hasKey mehtod), the lines 260 to 267 of findKey, a helper method of hasKey, was added. The added code has separate cases for "regular" keys and null keys now.
