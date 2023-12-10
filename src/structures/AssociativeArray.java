@@ -57,29 +57,31 @@ public class AssociativeArray<K, V> {
    * Create a copy of this AssociativeArray.
    */
   public AssociativeArray<K, V> clone() {
-    AssociativeArray<K,V> clonedAssociativeArray = new AssociativeArray<K,V>();
+    AssociativeArray<K,V> clonedAssociativeArray = 
+        new AssociativeArray<K,V>();
     int numOfExpansions = this.pairs.length / DEFAULT_CAPACITY;
 
-    // Expands the cloned array to match at least the size of the original array
+    // Expands the cloned array to match at least the 
+    // size of the original array
     for (int i = 0; i < numOfExpansions; i++) {
       clonedAssociativeArray.expand();
-    }
+    } // for
 
-    for (int i = 0; i < this.pairs.length; i++) { // Iterate through all of array
+    for (int i = 0; i < this.pairs.length; i++) { 
       if (this.pairs[i] != null) {
-        // As long as the entry is not null, create a new pair to insert in the cloned array
-        // at the same index currently in the original array, and copy the key and value 
-        // over to the new pair
+        // As long as the entry is not null, create a new pair to insert in 
+        // the cloned array at the same index currently in the original array,
+        // and copy the key and value over to the new pair
         KVPair<K,V> newPair = (KVPair<K,V>) new KVPair<K,V>(null, null);
         newPair.key = this.pairs[i].key;
         newPair.value = this.pairs[i].value;
         clonedAssociativeArray.pairs[i] = newPair;
       } else {
-        // Otherwise, you're looking at a null entry, so just set the spot in the cloned array
-        // to null 
+        // Otherwise, you're looking at a null entry, so just set the spot in 
+        // the cloned array to null 
         clonedAssociativeArray.pairs[i] = null;
-      }
-    }
+      } // if/else
+    } // for
     // Copy over the size
     clonedAssociativeArray.size = this.size;
 
@@ -91,28 +93,34 @@ public class AssociativeArray<K, V> {
    */
   public String toString() {
     // Format: "{ key0: value0, key1: value1, ... keyn: valuen }"
-    String keyValuePairs = "{"; // Will always print opening curly brace
+    String keyValuePairs = "{"; 
     int numOfPairs = this.size;
     int pairsAdded = 0;
     int i = 0;
 
-    if (numOfPairs != 0) { // Only add information about key value pairs if the arr is not empty
-      while (pairsAdded != numOfPairs) { // Keep looping if not all pairs in arr have been seen
-        if (this.pairs[i] != null) { // If there is an non-null pair in the array,
-          // Start writing standard string format ( key: value)
-          keyValuePairs += " " + this.pairs[i].key + ": " + this.pairs[i].value;
+    // Only add information about key value pairs if the arr is not empty
+    if (numOfPairs != 0) { 
+      // Keep looping if not all pairs in arr have been seen
+      while (pairsAdded != numOfPairs) { 
+        if (this.pairs[i] != null) { 
+          // If there is an non-null pair in the array,
+          // start writing standard string format ( key: value)
+          keyValuePairs += " " + this.pairs[i].key + ": " + 
+              this.pairs[i].value;
           pairsAdded++;
         
-          if (pairsAdded != numOfPairs) { // If there are more pairs in the array, add a comma
+          if (pairsAdded != numOfPairs) { 
+            // If there are more pairs in the array, add a comma
             keyValuePairs += ",";
-          } else { // Spacing for after the commas 
+          } else { 
+            // Spacing for after the commas 
             keyValuePairs += " ";
-          }
-        }
+          } // if/else
+        } // if
           i++;
-      }
-    }
-    keyValuePairs += "}"; // Will always print closing curly brace
+      } // while
+    } // if
+    keyValuePairs += "}";
       
     return keyValuePairs;
   } // toString()
@@ -124,6 +132,9 @@ public class AssociativeArray<K, V> {
   /**
    * Set the value associated with key to value. Future calls to
    * get(key) will return value.
+   * 
+   * @param key key to be added or have its value replaced
+   * @param value value to be added or to replace the previous value 
    */
   public void set(K key, V value) {
     int numOfPairs = this.size;
@@ -134,13 +145,13 @@ public class AssociativeArray<K, V> {
       this.pairs[0] = newPair;
       this.size++;
     } else if (numOfPairs == this.pairs.length) {
-      // If the array is full, then expand the array before adding the new entry
-      // Create new pair
+      // If the array is full, then expand the array before adding the 
+      // new entry and create a new pair
       KVPair<K,V> newPair = (KVPair<K,V>) new KVPair<K,V>(key, value);
       int nextEntryIndex = numOfPairs;
 
-      // Expand array, insert new pair in expanded array, and increase the size field of 
-      // the expanded array
+      // Expand array, insert new pair in expanded array, and increase 
+      // the size field of the expanded array
       this.expand();
       this.pairs[nextEntryIndex] = newPair; 
       this.size++; 
@@ -155,30 +166,32 @@ public class AssociativeArray<K, V> {
         // entry's value
         this.pairs[keyIndex].value = value;
       } catch (KeyNotFoundException knfe) {
-        // If an exception was caught, then there isn't a current entry in the array
-        // with the specified key, so add a new entry to the array
+        // If an exception was caught, then there isn't a current entry in 
+        // the array with the specified key, so add a new entry to the array
         KVPair<K,V> newPair = (KVPair<K,V>) new KVPair<K,V>(key, value);
         int i = 0;
 
         // Insert new pair at the first null space in the array
         while (this.pairs[i] != null) {
           ++i;
-        }
+        } // while
         this.pairs[i] = newPair;
         this.size++;
-      }
-    }
+      } // try/catch
+    } // if/else
   } // set(K,V)
 
   /**
    * Get the value associated with key.
    *
+   * @param key the key to reference for the value
    * @throws KeyNotFoundException
-   *                              when the key does not appear in the associative
-   *                              array.
+   *                              when the key does not appear in the 
+   *                              associative array.
    */
   public V get(K key) throws KeyNotFoundException {
-    // Find (if there it exists) the index of the pair with the specified key in the array
+    // Find (if there it exists) the index of the pair with the specified key 
+    // in the array
     int keyIndex = this.find(key);
     // Reference that key's value
     return this.pairs[keyIndex].value;
@@ -186,6 +199,8 @@ public class AssociativeArray<K, V> {
 
   /**
    * Determine if key appears in the associative array.
+   * 
+   * @param key the key to check if its in the associative array
    */
   public boolean hasKey(K key) {
     try {
@@ -198,13 +213,15 @@ public class AssociativeArray<K, V> {
       
       // Return false to indicate there is no such key in the array
       return false;
-    }     
+    } // try/catch
   } // hasKey(K)
 
   /**
    * Remove the key/value pair associated with a key. Future calls
    * to get(key) will throw an exception. If the key does not appear
    * in the associative array, does nothing.
+   * 
+   * @param key the key (with its referenced value) to be removed 
    */
   public void remove(K key) {
     try {
@@ -215,7 +232,7 @@ public class AssociativeArray<K, V> {
       this.size--;
     } catch (KeyNotFoundException knfe) {
       // Does nothing since there is no entry with specified key
-    }
+    } // try/catch
   } // remove(K)
 
   /**
@@ -240,6 +257,11 @@ public class AssociativeArray<K, V> {
   /**
    * Find the index of the first entry in `pairs` that contains key.
    * If no such entry is found, throws an exception.
+   * 
+   * @param key the key to be found in the associative array 
+   * @throws KeyNotFoundException
+   *                              when the key does not appear in the 
+   *                              associative array.
    */
   public int find(K key) throws KeyNotFoundException {
     int numOfPairs = this.size;
@@ -247,7 +269,7 @@ public class AssociativeArray<K, V> {
     if (numOfPairs == 0) {
       // If the array is empty, there is no key to be found
       throw new KeyNotFoundException();
-    }
+    } // if
 
     // Otherwise, the array has entries in it
     int i = 0;
@@ -257,25 +279,28 @@ public class AssociativeArray<K, V> {
     // Keep traversing the array while the end has not been reached and 
     // the key has not been found
     while (keyIndex == -1 && pairsTraversed != numOfPairs) {
-      // Only look at the entries in the array with a KVPair<K,V> to account for null keys
+      // Only look at the entries in the array with a KVPair<K,V> to 
+      // account for null keys
       if (this.pairs[i] instanceof KVPair<K, V>) {
         // To account for when the key is null:
         if (this.pairs[i].key == null) {
           if (key == null) {
             keyIndex = i;
-          }
+          } // if
         } else if (this.pairs[i].key.equals(key)) {
           keyIndex = i;
-        }
+        } // if/else
         ++pairsTraversed;
-      }
+      } // if 
       ++i;
-    }
+    } // while
 
-    if (keyIndex != -1) { // If the key was found, return the index at which it was found
+    if (keyIndex != -1) { 
+      // If the key was found, return the index at which it was found
       return keyIndex;
-    } else { // Otherwise, throw a KeyNotFoundException (the key doesn't exist)
+    } else { 
+      // Otherwise, throw a KeyNotFoundException (the key doesn't exist)
       throw new KeyNotFoundException();
-    }
+    } // if/else
   } // find(K)
 } // class AssociativeArray
