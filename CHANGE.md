@@ -1,3 +1,4 @@
 Changes made to AssociativeArray.java:
-1. To pass all tests in AssociativeArrayTests.java, lines 61 to 66 in the clone method were added. The added code now expands the cloned array to match the length of the original array, which I forgot to account for previously.
-2. To account for null keys (in hasKey method), the lines 260 to 267 of findKey, a helper method of hasKey, was added. The added code has separate cases for "regular" keys and null keys now.
+1. To pass all tests in AssociativeArrayTests.java, lines 62 to 68 in the clone method were added. The added code now expands the cloned array to match the length of the original array, which I forgot to account for previously.
+2. To account for null keys (in hasKey method), the lines 288 to 292 of findKey, a helper method of hasKey, was added. The added code has separate cases for "regular" keys and null keys now.
+3. This was not mentioned in the changes I should've made, but I fixed a logic error in my set method. Originally, when the associative array was full, the method expanded the associative array and added a new KVPair without checking if the KVPair already existed in the originally full associative array. That is now with lines 147-183.
