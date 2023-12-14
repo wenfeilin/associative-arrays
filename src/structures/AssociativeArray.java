@@ -144,17 +144,6 @@ public class AssociativeArray<K, V> {
       KVPair<K,V> newPair = (KVPair<K,V>) new KVPair<K,V>(key, value);
       this.pairs[0] = newPair;
       this.size++;
-    } else if (numOfPairs == this.pairs.length) {
-      // If the array is full, then expand the array before adding the 
-      // new entry and create a new pair
-      KVPair<K,V> newPair = (KVPair<K,V>) new KVPair<K,V>(key, value);
-      int nextEntryIndex = numOfPairs;
-
-      // Expand array, insert new pair in expanded array, and increase 
-      // the size field of the expanded array
-      this.expand();
-      this.pairs[nextEntryIndex] = newPair; 
-      this.size++; 
     } else {
       // Determine if a new entry will be added (anywhere in the array that is
       // null) or if the value of the entry with the specified key will be 
@@ -169,14 +158,27 @@ public class AssociativeArray<K, V> {
         // If an exception was caught, then there isn't a current entry in 
         // the array with the specified key, so add a new entry to the array
         KVPair<K,V> newPair = (KVPair<K,V>) new KVPair<K,V>(key, value);
-        int i = 0;
 
-        // Insert new pair at the first null space in the array
-        while (this.pairs[i] != null) {
-          ++i;
-        } // while
-        this.pairs[i] = newPair;
-        this.size++;
+        // Check if associative array is full first
+        if (numOfPairs == this.pairs.length) {
+          int nextEntryIndex = numOfPairs;
+
+          // Expand array, insert new pair in expanded array, and increase 
+          // the size field of the expanded array
+          this.expand();
+          this.pairs[nextEntryIndex] = newPair; 
+          this.size++; 
+        } else {
+          // Since associative array is not full
+          int i = 0;
+
+          // Insert new pair at the first null space in the array
+          while (this.pairs[i] != null) {
+            ++i;
+          } // while
+          this.pairs[i] = newPair;
+          this.size++;
+        } // if/else
       } // try/catch
     } // if/else
   } // set(K,V)
